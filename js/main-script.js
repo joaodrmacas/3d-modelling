@@ -7,12 +7,17 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 //////////////////////
 /* GLOBAL VARIABLES */
 //////////////////////
-
+var wireframe = false;
 var scene, renderer;
 var elements = [];
 var cameras = [];
+var materials = {
+    blue: new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe}),
+    red: new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe}),
+    green: new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe}),
+};
 var movcam_controls
-var curr_cam = 0;
+var curr_cam = 3;
 
 
 /////////////////////
@@ -24,14 +29,9 @@ function createScene(){
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xADD8E6); // Light blue color
 
-    var cube = new THREE.Mesh(
-        new THREE.BoxGeometry(30, 10, 50),
-        new THREE.MeshBasicMaterial({ color: 0x0000ff })
-    );
-    cube.position.set(0, 0, 0);
-    scene.add(cube);
+    createContainer();
+    
 }
-
 
 
 //////////////////////
@@ -133,6 +133,48 @@ function updateMovingCamera(camera,controls,claw){
 ////////////////////////
 /* CREATE OBJECT3D(S) */
 ////////////////////////
+
+function createContainerBase(obj,x,y,z){
+    'use strict';
+
+    var geometry = new THREE.BoxGeometry( 100, 10, 40 );
+    var cube = new THREE.Mesh( geometry, materials.blue );
+    cube.position.set(x,y,z);
+    obj.add(cube);
+}
+
+function createContainerBigWall(obj,x,y,z){
+    'use strict';
+
+    var geometry = new THREE.BoxGeometry( 100, 30, 10 );
+    var cube = new THREE.Mesh( geometry, materials.red );
+    cube.position.set(x,y,z);
+    obj.add(cube);
+}
+
+function createContainerSmallWall(obj,x,y,z){
+    'use strict';
+
+    var geometry = new THREE.BoxGeometry( 10, 30, 40 );
+    var cube = new THREE.Mesh( geometry, materials.red );
+    cube.position.set(x,y,z);
+    obj.add(cube);
+}
+
+function createContainer(){
+    'use strict';
+
+    var container = new THREE.Object3D();
+    
+    createContainerBase(container,0,0,0);
+    createContainerBigWall(container,0,10,20);
+    createContainerBigWall(container,0,10,-20);
+    createContainerSmallWall(container,50,10,0);
+    createContainerSmallWall(container,-50,10,0);
+
+    scene.add(container);
+    container.position.set(0,0,0);
+}
 
 //////////////////////
 /* CHECK COLLISIONS */
