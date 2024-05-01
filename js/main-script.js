@@ -21,15 +21,58 @@ function createScene(){
     'use strict';
 
     scene = new THREE.Scene();
-    scene.add(new THREE.AxesHelper(10));
+    scene.background = new THREE.Color(0xADD8E6); // Light blue color
+
 }
 
 //////////////////////
 /* CREATE CAMERA(S) */
 //////////////////////
 
+
+
 function createCameras(){
     'use strict';
+
+    //TODO mudar as coordenadas das cameras para centrarem a cena
+    //Usar ArrayCamera?
+    
+    var front_camera = new THREE.OrthographicCamera(
+        window.innerWidth / -2,   // left
+        window.innerWidth / 2,    // right
+        window.innerHeight / 2,   // top
+        window.innerHeight / -2,  // bottom
+        0.1,         // near
+        1000           // far
+    );
+    front_camera.position.set(100, 50, 0);
+    front_camera.lookAt(scene.position);
+    cameras.push(front_camera);
+
+    var top_camera = new THREE.OrthographicCamera(
+        window.innerWidth / -2,   // left
+        window.innerWidth / 2,    // right
+        window.innerHeight / 2,   // top
+        window.innerHeight / -2,  // bottom
+        0.1,         // near
+        1000           // far
+    );
+    top_camera.position.set(0, 100, 0);
+    top_camera.lookAt(scene.position);
+    cameras.push(top_camera);
+
+    var side_camera = new THREE.OrthographicCamera(
+        window.innerWidth / -2,   // left
+        window.innerWidth / 2,    // right
+        window.innerHeight / 2,   // top
+        window.innerHeight / -2,  // bottom
+        0.1,         // near
+        1000           // far
+    );
+    side_camera.position.set(100, 50, 0);
+    side_camera.lookAt(scene.position);
+    cameras.push(side_camera);
+
 }
 
 
@@ -89,7 +132,7 @@ function init() {
     createCameras();
 
     
-    render();
+    render(cameras[0]);
 }
 
 /////////////////////
@@ -100,7 +143,7 @@ function animate() {
 
     //animation
 
-    render();
+    render(cameras[0]);
     requestAnimationFrame(animate);
 }
 
