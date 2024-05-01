@@ -24,13 +24,19 @@ function createScene(){
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xADD8E6); // Light blue color
 
+    var cube = new THREE.Mesh(
+        new THREE.BoxGeometry(30, 10, 50),
+        new THREE.MeshBasicMaterial({ color: 0x0000ff })
+    );
+    cube.position.set(0, 0, 0);
+    scene.add(cube);
 }
+
+
 
 //////////////////////
 /* CREATE CAMERA(S) */
 //////////////////////
-
-
 
 function createCameras(){
     'use strict';
@@ -46,7 +52,7 @@ function createCameras(){
         0.1,         // near
         1000           // far
     );
-    front_camera.position.set(100, 50, 0);
+    front_camera.position.set(100, 0, 0);
     front_camera.lookAt(scene.position);
     cameras.push(front_camera);
 
@@ -70,7 +76,7 @@ function createCameras(){
         0.1,         // near
         1000           // far
     );
-    side_camera.position.set(100, 50, 0);
+    side_camera.position.set(0, 0, 100);
     side_camera.lookAt(scene.position);
     cameras.push(side_camera);
 
@@ -178,7 +184,7 @@ function init() {
     createScene();
     createCameras();
 
-    render(cameras[0]);
+    render(cameras[curr_cam]);
 
     window.addEventListener("resize", onResize);
     window.addEventListener("keydown", onKeyDown);
@@ -195,7 +201,7 @@ function animate() {
 
     update();
 
-    render(cameras[0]);
+    render(cameras[curr_cam]);
 
 }
 
