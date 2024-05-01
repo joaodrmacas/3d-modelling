@@ -11,8 +11,8 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 var scene, renderer;
 var elements = [];
 var cameras = [];
-var movcam_controls;
-
+var movcam_controls
+var curr_cam = 0;
 
 
 /////////////////////
@@ -178,8 +178,10 @@ function init() {
     createScene();
     createCameras();
 
-    
     render(cameras[0]);
+
+    window.addEventListener("resize", onResize);
+    window.addEventListener("keydown", onKeyDown);
 }
 
 /////////////////////
@@ -205,6 +207,13 @@ function onResize() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
+    if (window.innerHeight > 0 && window.innerWidth > 0) {
+        for (var i = 0; i < cameras.length; i++){
+            cameras[i].aspect = window.innerWidth / window.innerHeight;
+            cameras[i].updateProjectionMatrix();
+        }
+    }
+
 }
 
 ///////////////////////
@@ -213,6 +222,26 @@ function onResize() {
 function onKeyDown(e) {
     'use strict';
 
+    switch (e.keyCode) {
+        case 49: //1
+            curr_cam = 0;
+            break;
+        case 50: //2
+            curr_cam = 1;
+            break;
+        case 51: //3
+            curr_cam = 2;
+            break;
+        case 52: //4
+            curr_cam = 3;
+            break;
+        case 53: //5
+            curr_cam = 4;
+            break;
+        case 54: //6
+            curr_cam = 5;
+            break;
+    }
 }
 
 ///////////////////////
