@@ -11,6 +11,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 var scene, renderer;
 var elements = [];
 var cameras = [];
+var movcam_controls;
 
 
 
@@ -73,6 +74,49 @@ function createCameras(){
     side_camera.lookAt(scene.position);
     cameras.push(side_camera);
 
+    var perspective_camera = new THREE.PerspectiveCamera(
+        70,
+        window.innerWidth / window.innerHeight,
+        1,
+        1000
+    );
+    perspective_camera.position.set(50, 50, 50);
+    perspective_camera.lookAt(scene.position);
+    cameras.push(perspective_camera);
+
+    var orthographic_camera = new THREE.OrthographicCamera(
+        window.innerWidth / -2,   // left
+        window.innerWidth / 2,    // right
+        window.innerHeight / 2,   // top
+        window.innerHeight / -2,  // bottom
+        0.1,         // near
+        1000           // far
+    );
+    orthographic_camera.position.set(-50, -50, -50);
+    orthographic_camera.lookAt(scene.position);
+    cameras.push(orthographic_camera);
+
+    var movable_camera = new THREE.PerspectiveCamera(
+        70,
+        window.innerWidth / window.innerHeight,
+        1,
+        1000
+    );
+    movable_camera.lookAt(0,0,0)
+    movable_camera.position.set(0,0,0); //TODO meter a posicao inicial da garra
+    cameras.push(movable_camera);
+    movcam_controls = new OrbitControls(movable_camera, renderer.domElement);
+}
+
+function updateMovingCamera(camera,controls,claw){
+    'use strict';
+    var x = claw.position.x;
+    var y = claw.position.y;
+    var z = claw.position.z;
+
+    camera.position.set(x, y, z);
+    camera.lookAt(x,0,z);
+    controls.update();
 }
 
 
@@ -105,6 +149,9 @@ function handleCollisions(){
 ////////////
 function update(){
     'use strict';
+
+    //TODO uncomment quando a garra for criada
+    //updateMovingCamera(cameras[5],);
 
 }
 
@@ -142,9 +189,12 @@ function animate() {
     'use strict';
 
     //animation
+    requestAnimationFrame(animate);
+
+    update();
 
     render(cameras[0]);
-    requestAnimationFrame(animate);
+
 }
 
 ////////////////////////////
